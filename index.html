@@ -7,9 +7,20 @@
   <link rel="icon" type="image/png" href="assets/super_mario.png"/>
   <link href="css/main.css" rel="stylesheet">
   <title>Mohit Sahni | Home</title>
+  <script>
+    function httpGet()
+    {
+      var options = { year: 'numeric', month: 'long', day: 'numeric' };
+      const xmlHttp = new XMLHttpRequest();
+      xmlHttp.open( "GET", "https://api.github.com/repos/mohitkumarsahni/mohitkumarsahni.github.io/branches/master", false ); // false for synchronous request
+      xmlHttp.send( null );
+
+      document.getElementById("last-update-date").innerHTML = new Date(JSON.parse(xmlHttp.responseText).commit.commit.committer.date).toLocaleDateString("en-US", options);
+    }
+  </script>
 </head>
 
-<body>
+<body onload="httpGet()">
   <header class="top">
     <h1>
       <a class="site-title">Mohit Sahni</a>
@@ -36,15 +47,19 @@
       <tr>
         <td style="text-align: left;">
           <a href = "mailto: mohitkumarsahni@gmail.com" style="text-decoration: none;">
-              <img src="assets/email-24.png"/>
+              <img src="assets/email-24.png" alt="Email Icon."/>
           </a>
-          <span>|</span>
-          <a href = "https://www.linkedin.com/in/mohit-kumar-sahni-4858a1122/" target="_blank" style="text-decoration: none;">
-              <img src="assets/linkedin-20.png"/>
+          <span></span>
+          <a href="https://www.linkedin.com/in/mohit-kumar-sahni-4858a1122/" target="_blank" style="text-decoration: none;">
+              <img src="assets/linkedin-20.png" alt="LinkedIn Icon."/>
+          </a>
+          <span></span>
+          <a href="https://www.github.com/mohitkumarsahni/" target="_blank" style="text-decoration: none;">
+            <img src="assets/github-25.png" alt="GitHub Icon."/>
           </a>
         </td>
         <td style="text-align: right;">
-          Last Updated: August 08<sup>th</sup> 2020.
+          Last Updated: <span id="last-update-date"></span>.
         </td>
       </tr>
     </tbody>
