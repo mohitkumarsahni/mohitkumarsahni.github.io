@@ -7,6 +7,8 @@
   <link rel="icon" type="image/png" href="assets/super_mario.png"/>
   <link href="css/main.css" rel="stylesheet">
   <title>Mohit Sahni | Home</title>
+  <script src="./js/github-calendar.min.js"></script>
+  <link rel="stylesheet" href="./css/github-calendar-responsive.css"/>
   <script>
     function httpGet()
     {
@@ -41,6 +43,16 @@
       <hr>
     </dl>
   </div>
+
+  <div class="calendar">
+    <!-- Loading stuff -->
+    Loading the data just for you.
+  </div>
+  <script>
+    GitHubCalendar(".calendar", "mohitkumarsahni", { responsive: true });
+  </script>
+
+  <hr>
 
   <table style="border: 2px solid #5f5f5f;; width: 100%; color:#4183D7">
     <tbody>
