@@ -21,66 +21,6 @@
             document.getElementById("last-update-date").innerHTML = new Date(JSON.parse(xmlHttp.responseText).commit.commit.committer.date).toLocaleDateString("en-US", options);
         }
     </script>
-    <script>
-        function getBadges() {
-            const query = 'query userBadges($username: String!) {\n' +
-                '  matchedUser(username: $username) {\n' +
-                '    badges {\n' +
-                '      displayName\n' +
-                '      icon\n' +
-                '      medal {\n' +
-                '        slug\n' +
-                '        config {\n' +
-                '          iconGif\n' +
-                '          iconGifBackground\n' +
-                '        }\n' +
-                '      }\n' +
-                '      creationDate\n' +
-                '    }\n' +
-                '  }\n' +
-                '}\n';
-            fetch('https://leetcode.com/graphql', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
-                    'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token'
-                },
-                body: JSON.stringify({query, variables: 'mohitsahni'},)
-            })
-                .then(r => r.json())
-                .then(data => console.log('data returned:', data));
-        }
-    </script>
-    <script>
-        function getBadges1() {
-            const xhr = new XMLHttpRequest();
-            const url = 'https://leetcode.com/graphql';
-
-            xhr.open('POST', url);
-            query = 'query userBadges($username: String!) {\n' +
-                '  matchedUser(username: $username) {\n' +
-                '    badges {\n' +
-                '      displayName\n' +
-                '      icon\n' +
-                '      medal {\n' +
-                '        slug\n' +
-                '        config {\n' +
-                '          iconGif\n' +
-                '          iconGifBackground\n' +
-                '        }\n' +
-                '      }\n' +
-                '      creationDate\n' +
-                '    }\n' +
-                '  }\n' +
-                '}\n';
-            xhr.setRequestHeader('Access-Control-Allow-Origin','*');
-            xhr.send({query, variables: 'mohitsahni'});
-            console.log(xhr.responseText);
-        }
-    </script>
 </head>
 
 <body onload="httpGet(); getBadges1();">
@@ -148,7 +88,8 @@
                             </div>
                             <hr class="my-4">
                             <p>Hi, I am Mohit. I am working as a Software Developer. <br>
-                                I am trying to learn the things and I am a slow learner.
+                                I am trying to learn the things and I am a slow learner. I am also practicing competitive programming and trying to be better just a little. <br>
+                                I am also learning Docker, Kubernetes, Linux and few concepts on System Design.
                             </p>
                         </div>
                         <hr class="my-4">
@@ -159,18 +100,18 @@
                                         <span class="heading">22</span>
                                         <span class="description">Friends</span>
                                     </div>
-                                    <!--                                    <div>-->
-                                    <!--                                        <span class="heading">22</span>-->
-                                    <!--                                        <span class="description">Friends</span>-->
-                                    <!--                                    </div>-->
-                                    <!--                                    <div>-->
-                                    <!--                                        <span class="heading">10</span>-->
-                                    <!--                                        <span class="description">Photos</span>-->
-                                    <!--                                    </div>-->
-                                    <!--                                    <div>-->
-                                    <!--                                        <span class="heading">89</span>-->
-                                    <!--                                        <span class="description">Comments</span>-->
-                                    <!--                                    </div>-->
+                                    <div>
+                                        <span class="heading">22</span>
+                                        <span class="description">Friends</span>
+                                    </div>
+                                    <div>
+                                        <span class="heading">10</span>
+                                        <span class="description">Photos</span>
+                                    </div>
+                                    <div>
+                                        <span class="heading">89</span>
+                                        <span class="description">Comments</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -180,14 +121,6 @@
         </div>
     </div>
 </div>
-
-<!--<div class="calendar">-->
-<!--    &lt;!&ndash; Loading stuff &ndash;&gt;-->
-<!--    Loading the data just for you.-->
-<!--</div>-->
-<!--<script>-->
-<!--    GitHubCalendar(".calendar", "mohitkumarsahni", { responsive: true });-->
-<!--</script>-->
 
 <hr>
 
