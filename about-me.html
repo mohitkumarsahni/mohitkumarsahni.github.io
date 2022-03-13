@@ -45,6 +45,7 @@
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
                 },
+                mode: 'no-cors',
                 body: JSON.stringify({query, variables: 'mohitsahni'},)
             })
                 .then(r => r.json())
