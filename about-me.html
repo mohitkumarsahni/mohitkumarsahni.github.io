@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" type="image/png" href="assets/super_mario.png"/>
+    <title>About Me | Mohit Sahni</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./css/about-me.css">
+    <link href="./css/main.css" rel="stylesheet">
+    <script src="./js/github-calendar.min.js"></script>
+    <link rel="stylesheet" href="./css/github-calendar-responsive.css"/>
+    <script>
+        function httpGet() {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "GET", "https://api.github.com/repos/mohitkumarsahni/mohitkumarsahni.github.io/branches/master", false ); // false for synchronous request
+            xmlHttp.send( null );
+
+            document.getElementById("last-update-date").innerHTML = new Date(JSON.parse(xmlHttp.responseText).commit.commit.committer.date).toLocaleDateString("en-US", options);
+        }
+    </script>
+    <script>
+        function getBadges() {
+            const query = 'query userBadges($username: String!) {\n' +
+                '  matchedUser(username: $username) {\n' +
+                '    badges {\n' +
+                '      displayName\n' +
+                '      icon\n' +
+                '      medal {\n' +
+                '        slug\n' +
+                '        config {\n' +
+                '          iconGif\n' +
+                '          iconGifBackground\n' +
+                '        }\n' +
+                '      }\n' +
+                '      creationDate\n' +
+                '    }\n' +
+                '  }\n' +
+                '}\n';
+            fetch('https://leetcode.com/graphql', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({query, variables: 'mohitsahni'},)
+            })
+                .then(r => r.json())
+                .then(data => console.log('data returned:', data));
+        }
+    </script>
+</head>
+
+<body onload="httpGet(); getBadges();">
+<div class="main-content">
+    <div class="container mt-7">
+        <!-- Table -->
+        <div class="row">
+            <div class="col-xl-8 m-auto order-xl-2 mb-5 mb-xl-0">
+                <div class="card card-profile shadow">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-3 order-lg-2">
+                            <div class="card-profile-image">
+                                <img src="./assets/mohit_sahni.jpeg" class="rounded-circle">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+                        <div class="d-flex justify-content-between">
+
+                            <table class="mr-4">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <a href="https://www.github.com/mohitkumarsahni/" class="mr-4" target="_blank" style="text-decoration: none;">
+                                                <img src="assets/github-squared-32.png" alt="GitHub Icon."/>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="mr-4">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <a href = "mailto: mohitkumarsahni@gmail.com" target="_blank" style="text-decoration: none;">
+                                            <img src="assets/linkedin-32.png" alt="Email Icon."/>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href = "mailto: mohitkumarsahni@gmail.com" target="_blank" style="text-decoration: none;">
+                                            <img src="assets/email-32.png" alt="Email Icon."/>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-body pt-0 pt-md-4">
+                        <div class="text-center">
+                            <h3>
+                                Mohit SAHNI<span class="font-weight-light">, 26</span>
+                            </h3>
+                            <div class="h5 font-weight-300">
+                                <i class="ni location_pin mr-2"></i>Uttar Pradesh, India
+                            </div>
+                            <div class="h5 mt-4">
+                                <i class="ni business_briefcase-24 mr-2"></i>Research & Development Engineer
+                            </div>
+                            <div>
+                                <i class="ni education_hat mr-2"></i>Medidata Solutions (Dassault Systèmes IN)
+                            </div>
+                            <hr class="my-4">
+                            <p>Hi, I am Mohit. I am working as a Software Developer. <br>
+                                I am trying to learn the things and I am a slow learner.
+                            </p>
+                        </div>
+                        <hr class="my-4">
+                        <div class="row">
+                            <div class="col">
+                                <div id="badges" class="card-profile-stats d-flex justify-content-center mt-md-5" style="padding: 0">
+                                    <div>
+                                        <span class="heading">22</span>
+                                        <span class="description">Friends</span>
+                                    </div>
+                                    <!--                                    <div>-->
+                                    <!--                                        <span class="heading">22</span>-->
+                                    <!--                                        <span class="description">Friends</span>-->
+                                    <!--                                    </div>-->
+                                    <!--                                    <div>-->
+                                    <!--                                        <span class="heading">10</span>-->
+                                    <!--                                        <span class="description">Photos</span>-->
+                                    <!--                                    </div>-->
+                                    <!--                                    <div>-->
+                                    <!--                                        <span class="heading">89</span>-->
+                                    <!--                                        <span class="description">Comments</span>-->
+                                    <!--                                    </div>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="calendar">-->
+<!--    &lt;!&ndash; Loading stuff &ndash;&gt;-->
+<!--    Loading the data just for you.-->
+<!--</div>-->
+<!--<script>-->
+<!--    GitHubCalendar(".calendar", "mohitkumarsahni", { responsive: true });-->
+<!--</script>-->
+
+<hr>
+
+<table style="border: 2px solid #5f5f5f;; width: 100%; color:#4183D7">
+    <tbody>
+    <tr>
+        <td style="text-align: left;">
+            <a href="./index.html">
+                <img src="assets/home-32.png" alt="Home Icon."/>
+            </a>
+        </td>
+        <td style="text-align: right;">
+            Last Updated: <span id="last-update-date"></span>.
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<footer>
+    <div class="container">
+        <hr>
+        <div>
+            <center><img src="assets/bugs-32.png"/></center>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
