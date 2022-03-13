@@ -54,9 +54,36 @@
                 .then(data => console.log('data returned:', data));
         }
     </script>
+    <script>
+        function getBadges1() {
+            const xhr = new XMLHttpRequest();
+            const url = 'https://leetcode.com/graphql';
+
+            xhr.open('POST', url);
+            query = 'query userBadges($username: String!) {\n' +
+                '  matchedUser(username: $username) {\n' +
+                '    badges {\n' +
+                '      displayName\n' +
+                '      icon\n' +
+                '      medal {\n' +
+                '        slug\n' +
+                '        config {\n' +
+                '          iconGif\n' +
+                '          iconGifBackground\n' +
+                '        }\n' +
+                '      }\n' +
+                '      creationDate\n' +
+                '    }\n' +
+                '  }\n' +
+                '}\n';
+            xhr.setRequestHeader('Access-Control-Allow-Origin','*');
+            xhr.send({query, variables: 'mohitsahni'});
+            console.log(xhr.responseText);
+        }
+    </script>
 </head>
 
-<body onload="httpGet(); getBadges();">
+<body onload="httpGet(); getBadges1();">
 <div class="main-content">
     <div class="container mt-7">
         <!-- Table -->
