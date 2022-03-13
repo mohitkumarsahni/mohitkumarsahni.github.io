@@ -44,8 +44,8 @@
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
+                    'Allow-Access-Cross-Origin': '*'
                 },
-                mode: 'no-cors',
                 body: JSON.stringify({query, variables: 'mohitsahni'},)
             })
                 .then(r => r.json())
