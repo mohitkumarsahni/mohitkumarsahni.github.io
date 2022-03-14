@@ -9,21 +9,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./css/about-me.css">
     <link href="./css/main.css" rel="stylesheet">
-    <script src="./js/github-calendar.min.js"></script>
+    <script src="./js/github-functions.js"></script>
     <link rel="stylesheet" href="./css/github-calendar-responsive.css"/>
-    <script>
-        function httpGet() {
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            const xmlHttp = new XMLHttpRequest();
-            xmlHttp.open( "GET", "https://api.github.com/repos/mohitkumarsahni/mohitkumarsahni.github.io/branches/master", false ); // false for synchronous request
-            xmlHttp.send( null );
-
-            document.getElementById("last-update-date").innerHTML = new Date(JSON.parse(xmlHttp.responseText).commit.commit.committer.date).toLocaleDateString("en-US", options);
-        }
-    </script>
 </head>
 
-<body onload="httpGet(); getBadges1();">
+<body onload="getLastUpdateTime(); getNumberOfAnimeTales(); getNumberOfTechTales(); getNumberOfComicTales();">
 <div class="main-content">
     <div class="container mt-7">
         <!-- Table -->
@@ -75,7 +65,7 @@
                     <div class="card-body pt-0 pt-md-4">
                         <div class="text-center">
                             <h3>
-                                Mohit SAHNI<span class="font-weight-light">, 26</span>
+                                Mohit SAHNI
                             </h3>
                             <div class="h5 font-weight-300">
                                 <i class="ni location_pin mr-2"></i>Uttar Pradesh, India
@@ -95,22 +85,14 @@
                         <hr style="margin-bottom: 0;">
                         <div class="row">
                             <div class="col">
-                                <div id="badges" class="card-profile-stats d-flex justify-content-center" style="padding: 0">
-                                    <div>
-                                        <span class="heading">22</span>
-                                        <span class="description">Tales</span>
+                                <div class="card-profile-stats d-flex justify-content-center" style="padding: 0">
+                                    <div id="all-tales">
                                     </div>
-                                    <div>
-                                        <span class="heading">22</span>
-                                        <span class="description">Tech Tales</span>
+                                    <div id="tech-tales">
                                     </div>
-                                    <div>
-                                        <span class="heading">10</span>
-                                        <span class="description">Anime Tales</span>
+                                    <div id="anime-tales">
                                     </div>
-                                    <div>
-                                        <span class="heading">89</span>
-                                        <span class="description">Comic Tales</span>
+                                    <div id="comic-tales">
                                     </div>
                                 </div>
                             </div>
