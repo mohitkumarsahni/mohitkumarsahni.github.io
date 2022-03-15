@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="./css/about-me.css">
     <link href="./css/main.css" rel="stylesheet">
     <script src="./js/github-functions.js"></script>
+    <script src="./js/github-calendar.min.js"></script>
     <link rel="stylesheet" href="./css/github-calendar-responsive.css"/>
 </head>
 
@@ -104,7 +105,17 @@
     </div>
 </div>
 
-<hr>
+<!-- Prepare a container for your calendar. -->
+<div class="calendar" style="border: 2px solid #5f5f5f; margin-block-start: 0.5em; margin-block-end: 0.5em;">
+    <!-- Loading stuff -->
+    Loading the data just for you.
+</div>
+
+<script>
+    GitHubCalendar(".calendar", "mohitkumarsahni", { responsive: true });
+</script>
+
+
 
 <table style="border: 2px solid #5f5f5f;; width: 100%; color:#4183D7">
     <tbody>
@@ -123,7 +134,7 @@
 
 <footer>
     <div class="container">
-        <hr>
+        <hr style="margin-block-start: 0.5em; margin-block-end: 0.5em;">
         <div>
             <center><img src="assets/bugs-32.png"/></center>
         </div>
