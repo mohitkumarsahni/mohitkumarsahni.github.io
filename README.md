@@ -1,3 +1,3 @@
 # MOHITSAHNI.ME
 
-Personal blog to record the helpful notes & learning experience along with fun tales.
+Personal journal to record the logs, helpful notes and learning experience.
