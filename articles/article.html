@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>My Article</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+    <style>
+        article {
+          line-height: 1.7;
+        }
+
+        article h2 {
+          margin-top: 2rem;
+          color: #0066cc;
+        }
+
+        article code {
+          background: #f2f2f2;
+          padding: 0.2rem 0.4rem;
+          border-radius: 4px;
+          font-family: monospace;
+        }
+
+        article pre {
+          background: #f2f2f2;
+          padding: 1rem;
+          border-radius: 6px;
+          overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+<main>
+    <div class="content">
+        <a href="../index.html">← Back to Logs</a>
+        <h1>📘 Understanding Java Streams</h1>
+        <p><em>Written by Mohit Sahni • July 2025</em></p>
+
+        <article>
+            <h2>🔹 What Are Streams?</h2>
+            <p>
+                Streams in Java are a way to process collections of objects in a functional style.
+                They allow you to map, filter, and reduce data with less boilerplate.
+            </p>
+
+            <h2>🔹 Example</h2>
+            <pre>
+List&lt;String&gt; names = List.of("Alice", "Bob", "Charlie");
+List&lt;String&gt; result = names.stream()
+    .filter(name -&gt; name.startsWith("A"))
+    .toList();</pre>
+
+            <h2>🔹 Why Use Them?</h2>
+            <ul>
+                <li>Concise and readable</li>
+                <li>Encourages immutability</li>
+                <li>Works well with lambda expressions</li>
+            </ul>
+
+            <h2>🔹 Final Thoughts</h2>
+            <p>
+                Use streams when it helps clarity, but don't overuse them for everything. They shine in transformations, not in control-heavy logic.
+            </p>
+        </article>
+    </div>
+</main>
+
+<footer>
+    &copy; 2025 Mohit Sahni. All rights reserved. |
+    <a href="profile.html" style="color: white;">My Profile</a>
+</footer>
+
+</body>
+</html>
