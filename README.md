@@ -1,8 +1,8 @@
 # Mohit Kumar Sahni - Personal Profile
 
-A minimal personal introduction page hosted with GitHub Pages.
+A minimal, HTML-only personal introduction page hosted with GitHub Pages.
 
-Edit `index.html` to update the introduction, tech stack, and contact links. Visual styles live in `styles.css`.
+Edit `index.html` to update the introduction, tech stack, and contact links.
 
 ## Preview locally
 
