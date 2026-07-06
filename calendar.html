@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A plain HTML calendar with monthly and yearly views.">
+  <title>Calendar</title>
+  <style>
+    body {
+      font-family: serif;
+      font-size: 14px;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: max-content;
+      text-align: center;
+    }
+
+    form p {
+      display: inline-block;
+      margin-right: 1em;
+    }
+
+    table {
+      border-collapse: collapse;
+    }
+
+    #calendar:not(.year-view) section {
+      margin-left: auto;
+      margin-right: auto;
+      width: max-content;
+    }
+
+    th,
+    td {
+      height: 1.5em;
+      min-width: 1.7em;
+      padding: 0.1em 0.25em;
+      text-align: right;
+      vertical-align: top;
+    }
+
+    th {
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 1em;
+      margin: 0.5em 0 0.25em;
+    }
+
+    #time-section,
+    #timestamp-section {
+      margin-top: 1.5em;
+    }
+
+    .year-view {
+      display: grid;
+      gap: 0.75em 1em;
+      grid-template-columns: repeat(4, max-content);
+    }
+
+    .year-view section {
+      break-inside: avoid;
+    }
+
+    @media (max-width: 900px) {
+      .year-view {
+        grid-template-columns: repeat(3, max-content);
+      }
+    }
+
+    @media (max-width: 650px) {
+      .year-view {
+        grid-template-columns: repeat(2, max-content);
+      }
+    }
+
+    @media (max-width: 430px) {
+      body {
+        font-size: 12px;
+      }
+
+      .year-view {
+        grid-template-columns: max-content;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Calendar</h1>
+    <p><a href="index.html">Back to home</a></p>
+  </header>
+
+  <main>
+    <form id="calendar-controls">
+      <p>
+        <label for="view">View:</label>
+        <select id="view" name="view">
+          <option value="month">Monthly</option>
+          <option value="year">Yearly</option>
+        </select>
+      </p>
+
+      <p>
+        <label for="month">Month:</label>
+        <select id="month" name="month">
+          <option value="0">January</option>
+          <option value="1">February</option>
+          <option value="2">March</option>
+          <option value="3">April</option>
+          <option value="4">May</option>
+          <option value="5">June</option>
+          <option value="6">July</option>
+          <option value="7">August</option>
+          <option value="8">September</option>
+          <option value="9">October</option>
+          <option value="10">November</option>
+          <option value="11">December</option>
+        </select>
+      </p>
+
+      <p>
+        <label for="year">Year:</label>
+        <input id="year" name="year" type="number" min="1" max="9999">
+      </p>
+
+      <p>
+        <button id="today-button" type="button">Today</button>
+      </p>
+    </form>
+
+    <div id="calendar"></div>
+
+    <hr>
+
+    <section id="time-section">
+      <h2>Current Time</h2>
+      <p>IST: <span id="ist-now"></span></p>
+      <p>UTC: <span id="utc-now"></span></p>
+    </section>
+
+    <section id="timestamp-section">
+      <h2>Unix Timestamp</h2>
+      <p><button id="timestamp-button" type="button">Get timestamp</button></p>
+      <p>Timestamp: <span id="timestamp-value"></span></p>
+      <p>IST: <span id="timestamp-ist"></span></p>
+      <p>UTC: <span id="timestamp-utc"></span></p>
+    </section>
+  </main>
+
+  <script>
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
+    const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+    const viewSelect = document.getElementById('view');
+    const monthSelect = document.getElementById('month');
+    const yearInput = document.getElementById('year');
+    const todayButton = document.getElementById('today-button');
+    const calendar = document.getElementById('calendar');
+    const istNow = document.getElementById('ist-now');
+    const utcNow = document.getElementById('utc-now');
+    const timestampButton = document.getElementById('timestamp-button');
+    const timestampValue = document.getElementById('timestamp-value');
+    const timestampIst = document.getElementById('timestamp-ist');
+    const timestampUtc = document.getElementById('timestamp-utc');
+
+    const today = new Date();
+    monthSelect.value = String(today.getMonth());
+    yearInput.value = String(today.getFullYear());
+
+    function goToToday() {
+      const currentDate = new Date();
+
+      viewSelect.value = 'month';
+      monthSelect.value = String(currentDate.getMonth());
+      yearInput.value = String(currentDate.getFullYear());
+      renderCalendar();
+    }
+
+    function mondayFirstDayIndex(date) {
+      return (date.getDay() + 6) % 7;
+    }
+
+    function formatDateTime(date, timeZone) {
+      return date.toLocaleString('en-IN', {
+        dateStyle: 'full',
+        timeStyle: 'long',
+        timeZone: timeZone
+      });
+    }
+
+    function updateCurrentTime() {
+      const currentDate = new Date();
+
+      istNow.textContent = formatDateTime(currentDate, 'Asia/Kolkata');
+      utcNow.textContent = formatDateTime(currentDate, 'UTC');
+    }
+
+    function showTimestamp() {
+      const currentDate = new Date();
+
+      timestampValue.textContent = String(currentDate.getTime());
+      timestampIst.textContent = formatDateTime(currentDate, 'Asia/Kolkata');
+      timestampUtc.textContent = formatDateTime(currentDate, 'UTC');
+    }
+
+    function createMonthTable(year, month) {
+      const section = document.createElement('section');
+      const heading = document.createElement('h2');
+      const table = document.createElement('table');
+      const thead = document.createElement('thead');
+      const tbody = document.createElement('tbody');
+      const headerRow = document.createElement('tr');
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const firstDay = mondayFirstDayIndex(new Date(year, month, 1));
+      const currentDate = new Date();
+      const currentYear = currentDate.getFullYear();
+      const currentMonth = currentDate.getMonth();
+      const currentDay = currentDate.getDate();
+      let day = 1;
+
+      heading.textContent = monthNames[month] + ' ' + year;
+      section.appendChild(heading);
+      table.border = '1';
+      table.cellPadding = '4';
+      table.cellSpacing = '0';
+
+      for (const dayName of dayNames) {
+        const th = document.createElement('th');
+        th.textContent = dayName;
+        headerRow.appendChild(th);
+      }
+
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      for (let week = 0; day <= daysInMonth; week += 1) {
+        const row = document.createElement('tr');
+
+        for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek += 1) {
+          const cell = document.createElement('td');
+
+          if ((week > 0 || dayOfWeek >= firstDay) && day <= daysInMonth) {
+            if (year === currentYear && month === currentMonth && day === currentDay) {
+              const strong = document.createElement('strong');
+              strong.textContent = String(day).padStart(2, '0');
+              cell.appendChild(strong);
+            } else {
+              cell.textContent = String(day);
+            }
+
+            day += 1;
+          }
+
+          row.appendChild(cell);
+        }
+
+        tbody.appendChild(row);
+      }
+
+      table.appendChild(tbody);
+      section.appendChild(table);
+
+      return section;
+    }
+
+    function renderCalendar() {
+      const view = viewSelect.value;
+      const selectedMonth = Number(monthSelect.value);
+      const selectedYear = Number(yearInput.value) || today.getFullYear();
+
+      calendar.replaceChildren();
+      calendar.className = '';
+
+      if (view === 'year') {
+        monthSelect.disabled = true;
+        calendar.className = 'year-view';
+
+        for (let month = 0; month < 12; month += 1) {
+          calendar.appendChild(createMonthTable(selectedYear, month));
+        }
+      } else {
+        monthSelect.disabled = false;
+        calendar.appendChild(createMonthTable(selectedYear, selectedMonth));
+      }
+    }
+
+    viewSelect.addEventListener('change', renderCalendar);
+    monthSelect.addEventListener('change', renderCalendar);
+    yearInput.addEventListener('input', renderCalendar);
+    todayButton.addEventListener('click', goToToday);
+    timestampButton.addEventListener('click', showTimestamp);
+
+    renderCalendar();
+    updateCurrentTime();
+    setInterval(updateCurrentTime, 1000);
+  </script>
+</body>
+</html>
