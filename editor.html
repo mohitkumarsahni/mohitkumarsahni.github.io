@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A simple editor for plain text and JSON content.">
+  <title>Editor</title>
+  <style>
+    body {
+      font-family: serif;
+      margin: 0 auto;
+      max-width: 900px;
+      padding: 1rem;
+    }
+
+    textarea {
+      border: 1px solid #777;
+      box-sizing: border-box;
+      font-family: monospace;
+      min-height: 70vh;
+      padding: 0.5rem;
+      width: 100%;
+    }
+
+    p {
+      margin: 0.75em 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Editor</h1>
+    <p><a href="index.html">Back to home</a></p>
+  </header>
+
+  <main>
+    <p>
+      <label for="editor-type">Type:</label>
+      <select id="editor-type" name="editor-type">
+        <option value="plain">Plain text</option>
+        <option value="json">JSON</option>
+      </select>
+    </p>
+
+    <p>
+      <button id="copy-button" type="button">Copy</button>
+      <button id="save-button" type="button">Save</button>
+      <button id="download-button" type="button">Download</button>
+      <button id="clear-button" type="button">Clear</button>
+      <button id="format-json-button" type="button">Format JSON</button>
+    </p>
+
+    <textarea id="editor" spellcheck="false" autofocus></textarea>
+
+    <p id="status"></p>
+  </main>
+
+  <script>
+    const typeStorageKey = 'editor-type';
+    const contentStorageKeyPrefix = 'editor-content-';
+    const editorType = document.getElementById('editor-type');
+    const editor = document.getElementById('editor');
+    const copyButton = document.getElementById('copy-button');
+    const saveButton = document.getElementById('save-button');
+    const downloadButton = document.getElementById('download-button');
+    const clearButton = document.getElementById('clear-button');
+    const formatJsonButton = document.getElementById('format-json-button');
+    const status = document.getElementById('status');
+
+    editorType.value = localStorage.getItem(typeStorageKey) === 'json' ? 'json' : 'plain';
+
+    function getStorageKey() {
+      return contentStorageKeyPrefix + editorType.value;
+    }
+
+    function getActiveContent() {
+      return editor.value;
+    }
+
+    function getCopyContent() {
+      return editor.value;
+    }
+
+    function setActiveContent(content) {
+      editor.value = content;
+    }
+
+    function setStatus(message) {
+      status.textContent = message;
+    }
+
+    function loadContent() {
+      const savedContent = localStorage.getItem(getStorageKey()) || '';
+      const isJson = editorType.value === 'json';
+
+      formatJsonButton.disabled = !isJson;
+      setActiveContent(savedContent);
+      localStorage.setItem(typeStorageKey, editorType.value);
+      setStatus('Type: ' + editorType.options[editorType.selectedIndex].text + '.');
+    }
+
+    function saveContent() {
+      localStorage.setItem(getStorageKey(), getActiveContent());
+      localStorage.setItem(typeStorageKey, editorType.value);
+      setStatus('Saved in this browser.');
+    }
+
+    function copyContent() {
+      const content = getCopyContent();
+
+      if (!content) {
+        setStatus('Nothing to copy.');
+        return;
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(content).then(function () {
+          setStatus('Copied.');
+        }).catch(function () {
+          setStatus('Copy failed.');
+        });
+      } else {
+        editor.select();
+        setStatus('Text selected for manual copy.');
+      }
+    }
+
+    function clearContent() {
+      setActiveContent('');
+      localStorage.removeItem(getStorageKey());
+      setStatus('Cleared.');
+    }
+
+    function downloadContent() {
+      const content = getActiveContent();
+      const extension = editorType.value === 'json' ? 'json' : 'txt';
+      const mimeType = editorType.value === 'json' ? 'application/json' : 'text/plain';
+      const fileName = 'content.' + extension;
+      const blob = new Blob([content], { type: mimeType });
+      const link = document.createElement('a');
+
+      link.href = URL.createObjectURL(blob);
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(link.href);
+      setStatus('Downloaded ' + fileName + '.');
+    }
+
+    function autosaveContent() {
+      localStorage.setItem(getStorageKey(), getActiveContent());
+      setStatus('Autosaved.');
+    }
+
+    function formatJson() {
+      try {
+        editor.value = JSON.stringify(JSON.parse(editor.value), null, 2);
+        autosaveContent();
+        setStatus('JSON formatted.');
+      } catch (error) {
+        setStatus('Invalid JSON: ' + error.message);
+      }
+    }
+
+    editorType.addEventListener('change', loadContent);
+    editor.addEventListener('input', autosaveContent);
+    copyButton.addEventListener('click', copyContent);
+    saveButton.addEventListener('click', saveContent);
+    downloadButton.addEventListener('click', downloadContent);
+    clearButton.addEventListener('click', clearContent);
+    formatJsonButton.addEventListener('click', formatJson);
+
+    loadContent();
+  </script>
+</body>
+</html>

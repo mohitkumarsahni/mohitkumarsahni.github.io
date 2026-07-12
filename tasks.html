@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A plain checklist for quick personal tasks.">
+  <title>Checklist</title>
+  <style>
+    body {
+      background: #fafafa;
+      color: #222;
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.5;
+      margin: 0 auto;
+      max-width: 860px;
+      padding: 1.25rem;
+    }
+
+    header {
+      border-bottom: 1px solid #bbb;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+    }
+
+    h1 {
+      margin-bottom: 0.25rem;
+    }
+
+    h2 {
+      font-size: 1.05rem;
+      margin: 0 0 0.5rem;
+    }
+
+    input[type="text"],
+    textarea {
+      border: 1px solid #999;
+      box-sizing: border-box;
+      max-width: 100%;
+      padding: 0.35rem;
+      width: 28rem;
+    }
+
+    textarea {
+      height: 4em;
+      vertical-align: top;
+    }
+
+    .top-area {
+      align-items: start;
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: minmax(0, 1fr) max-content;
+      margin-bottom: 1rem;
+    }
+
+    .action-area,
+    .time-box,
+    .task-item {
+      background: #fff;
+      border: 1px solid #bbb;
+      border-radius: 6px;
+      padding: 0.75rem;
+    }
+
+    .time-box {
+      min-width: 18rem;
+    }
+
+    dialog {
+      border: 1px solid #777;
+      border-radius: 6px;
+      max-width: 95%;
+      padding: 1rem;
+    }
+
+    dialog::backdrop {
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    button {
+      cursor: pointer;
+      padding: 0.25rem 0.55rem;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    li {
+      margin: 0.75em 0;
+    }
+
+    .done {
+      color: #666;
+      text-decoration: line-through;
+    }
+
+    .task-title {
+      font-weight: bold;
+      margin-left: 0.35rem;
+      margin-right: 0.5rem;
+    }
+
+    .description {
+      color: #333;
+      margin: 0.4rem 0 0 1.65rem;
+      white-space: pre-wrap;
+    }
+
+    .created-time {
+      color: #666;
+      font-size: 0.9rem;
+      margin: 0.35rem 0 0 1.65rem;
+    }
+
+    #status {
+      color: #555;
+    }
+
+    p {
+      margin: 0.75em 0;
+    }
+
+    @media (max-width: 700px) {
+      .top-area {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Checklist</h1>
+    <p><a href="index.html">Back to home</a></p>
+  </header>
+
+  <main>
+    <div class="top-area">
+      <section class="action-area">
+        <h2>Tasks</h2>
+        <p>
+          <button id="open-task-dialog-button" type="button">Add task</button>
+          <button id="clear-completed-button" type="button">Clear completed</button>
+          <button id="clear-all-button" type="button">Clear all</button>
+        </p>
+        <p id="status"></p>
+      </section>
+
+      <section class="time-box">
+        <h2>Current Time</h2>
+        <p>IST: <span id="ist-now"></span></p>
+        <p>UTC: <span id="utc-now"></span></p>
+      </section>
+    </div>
+
+    <ul id="task-list"></ul>
+
+    <dialog id="task-dialog">
+      <form id="task-form" method="dialog">
+        <h2>Add Task</h2>
+        <p>
+          <label for="task-input">Task:</label>
+          <input id="task-input" name="task-input" type="text" autocomplete="off">
+        </p>
+        <p>
+          <label for="description-input">Description:</label>
+          <textarea id="description-input" name="description-input"></textarea>
+        </p>
+        <p>
+          <button id="add-task-button" type="submit">Add</button>
+          <button id="cancel-task-button" type="button">Cancel</button>
+        </p>
+      </form>
+    </dialog>
+  </main>
+
+  <script>
+    const storageKey = 'checklist-tasks';
+    const openTaskDialogButton = document.getElementById('open-task-dialog-button');
+    const taskDialog = document.getElementById('task-dialog');
+    const taskForm = document.getElementById('task-form');
+    const taskInput = document.getElementById('task-input');
+    const descriptionInput = document.getElementById('description-input');
+    const cancelTaskButton = document.getElementById('cancel-task-button');
+    const clearCompletedButton = document.getElementById('clear-completed-button');
+    const clearAllButton = document.getElementById('clear-all-button');
+    const taskList = document.getElementById('task-list');
+    const status = document.getElementById('status');
+    const istNow = document.getElementById('ist-now');
+    const utcNow = document.getElementById('utc-now');
+    let tasks = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+    function saveTasks() {
+      localStorage.setItem(storageKey, JSON.stringify(tasks));
+    }
+
+    function setStatus(message) {
+      const openTasks = tasks.filter(function (task) {
+        return !task.done;
+      }).length;
+
+      status.textContent = message + ' Open: ' + openTasks + '. Total: ' + tasks.length + '.';
+    }
+
+    function formatDateTime(date, timeZone) {
+      return date.toLocaleString('en-IN', {
+        dateStyle: 'full',
+        timeStyle: 'long',
+        timeZone: timeZone
+      });
+    }
+
+    function updateCurrentTime() {
+      const currentDate = new Date();
+
+      istNow.textContent = formatDateTime(currentDate, 'Asia/Kolkata');
+      utcNow.textContent = formatDateTime(currentDate, 'UTC');
+    }
+
+    function renderTasks(message) {
+      taskList.replaceChildren();
+
+      tasks.forEach(function (task, index) {
+        const item = document.createElement('li');
+        const checkbox = document.createElement('input');
+        const label = document.createElement('span');
+        const description = document.createElement('div');
+        const createdTime = document.createElement('div');
+        const deleteButton = document.createElement('button');
+
+        item.className = 'task-item';
+
+        checkbox.type = 'checkbox';
+        checkbox.checked = task.done;
+        checkbox.addEventListener('change', function () {
+          tasks[index].done = checkbox.checked;
+          saveTasks();
+          renderTasks('Updated.');
+        });
+
+        label.textContent = ' ' + task.text + ' ';
+        label.className = task.done ? 'task-title done' : 'task-title';
+
+        description.textContent = task.description || '';
+        description.className = 'description';
+
+        if (task.createdAt) {
+          const createdDate = new Date(task.createdAt);
+          createdTime.textContent = 'Added IST: ' + formatDateTime(createdDate, 'Asia/Kolkata') +
+            ' | UTC: ' + formatDateTime(createdDate, 'UTC');
+          createdTime.className = 'created-time';
+        }
+
+        deleteButton.type = 'button';
+        deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click', function () {
+          tasks.splice(index, 1);
+          saveTasks();
+          renderTasks('Deleted.');
+        });
+
+        item.appendChild(checkbox);
+        item.appendChild(label);
+        item.appendChild(deleteButton);
+        if (task.description) {
+          item.appendChild(description);
+        }
+        if (task.createdAt) {
+          item.appendChild(createdTime);
+        }
+        taskList.appendChild(item);
+      });
+
+      setStatus(message);
+    }
+
+    taskForm.addEventListener('submit', function (event) {
+      const text = taskInput.value.trim();
+      const description = descriptionInput.value.trim();
+
+      event.preventDefault();
+
+      if (!text) {
+        setStatus('Enter a task.');
+        return;
+      }
+
+      tasks.push({
+        text: text,
+        description: description,
+        createdAt: new Date().toISOString(),
+        done: false
+      });
+      taskInput.value = '';
+      descriptionInput.value = '';
+      taskDialog.close();
+      saveTasks();
+      renderTasks('Added.');
+    });
+
+    openTaskDialogButton.addEventListener('click', function () {
+      taskDialog.showModal();
+      taskInput.focus();
+    });
+
+    cancelTaskButton.addEventListener('click', function () {
+      taskDialog.close();
+    });
+
+    clearCompletedButton.addEventListener('click', function () {
+      tasks = tasks.filter(function (task) {
+        return !task.done;
+      });
+      saveTasks();
+      renderTasks('Completed tasks cleared.');
+    });
+
+    clearAllButton.addEventListener('click', function () {
+      tasks = [];
+      saveTasks();
+      renderTasks('All tasks cleared.');
+    });
+
+    renderTasks('Loaded.');
+    updateCurrentTime();
+    setInterval(updateCurrentTime, 1000);
+  </script>
+</body>
+</html>
